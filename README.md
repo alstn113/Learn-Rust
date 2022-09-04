@@ -7,6 +7,7 @@
     - Rust 공식문서 https://www.rust-lang.org/learn/get-started
     - 한국 Rust 사용자 그룹 https://rust-kr.org/pages/install/
     - 자바스크립트와 비교 https://yceffort.kr/2022/02/rust-for-javascript-developer-chapter1
+    - 한국어 유튜브 강의 https://www.youtube.com/watch?v=W9DO6m8JSSs&list=PLfllocyHVgsSJf1zO6k6o3SX2mbZjAqYE&index=1
 
 ### rustup으로 컴파일러와 패키지 매니저 설치
 
