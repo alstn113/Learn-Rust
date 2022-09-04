@@ -1,4 +1,4 @@
-# Macbook M1 air Rust 설치
+# Macbook M1 Air Rust 설치
 
 ## 참고
 
@@ -22,7 +22,7 @@
 
 ### VSC Extension
 
-    rust-analyzer, Better TOML, crates 설치
+    rust-analyzer, Better TOML, crates, CodeLLDB 설치
 
 ### 새 프로젝트 시작하기
 
