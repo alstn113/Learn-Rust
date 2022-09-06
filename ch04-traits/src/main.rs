@@ -5,14 +5,10 @@ struct Monster {
 }
 
 #[derive(Debug)]
-struct Wizard {
-    health: i32,
-}
+struct Wizard {}
 
 #[derive(Debug)]
-struct Elf {
-    health: i32,
-}
+struct Elf {}
 
 trait Magic {}
 trait FightClose {}
@@ -30,7 +26,7 @@ where
     if distance < 10 {
         oppenent.health -= 10;
         println!(
-            "Monster's health : {}, character : {:?}",
+            "Monster's health : {}, character's health : {:?}",
             oppenent.health, character
         );
     }
@@ -61,8 +57,8 @@ where
 }
 
 fn main() {
-    let wizard = Wizard { health: 80 };
-    let elf = Elf { health: 100 };
+    let wizard = Wizard {};
+    let elf = Elf {};
 
     let mut monster = Monster { health: 100 };
 
