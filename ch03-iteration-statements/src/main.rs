@@ -30,7 +30,7 @@ fn fn_while() {
 
 fn fn_for() {
     for i in 0..5 {
-        println!("{i}");
+        println!("fn_for: {}", i);
     }
 }
 
