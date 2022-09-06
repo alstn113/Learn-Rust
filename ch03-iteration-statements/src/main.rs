@@ -1,30 +1,42 @@
-fn loop() {
+fn fn_loop() {
     let mut counter = 0;
     loop {
-        println!("looping");
+        println!("fn_loop: {}", counter);
         counter += 1;
-        if counter == 10 {
+        if counter == 5 {
             break;
         }
     }
 }
 
-fn while() {
+fn fn_loop_name() {
     let mut counter = 0;
-    while counter < 10 {
-        println!("looping");
+    'outer: loop {
+        println!("fn_loop_name: {}", counter);
+        counter += 1;
+        if counter == 5 {
+            break 'outer;
+        }
+    }
+}
+
+fn fn_while() {
+    let mut counter = 0;
+    while counter < 5 {
+        println!("fn_while: {}", counter);
         counter += 1;
     }
 }
 
-fn for() {
-    for i in 0..10 {
-        println!("looping");
+fn fn_for() {
+    for i in 0..5 {
+        println!("{i}");
     }
 }
 
 fn main() {
-    loop();
-    while();
-    for();
+    fn_loop();
+    fn_loop_name();
+    fn_while();
+    fn_for();
 }
