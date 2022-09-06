@@ -1,3 +1,5 @@
+// trait = interface
+
 use std::fmt::Debug;
 
 struct Monster {
