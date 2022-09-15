@@ -34,3 +34,8 @@
 
     cargo build
     cargo run
+
+### Clippy 실행 ( same as eslint )
+
+    cargo clippy // 찾기만 하는 명령어
+    cargo clippy --fix // 찾고 수정까지 해주는 명령어
