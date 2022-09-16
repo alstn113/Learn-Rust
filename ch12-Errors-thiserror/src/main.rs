@@ -1,3 +1,6 @@
+use std::any::Any;
+
+use anyhow::{anyhow, Error as AnyhowError};
 use thiserror::Error;
 
 #[derive(Debug)]
@@ -31,6 +34,22 @@ impl User {
     }
 }
 
+// fn do_some_stuff(number: &str, age: u8, points: u32) -> Result<(), AnyhowError> {
+//     let my_number = number.parse::<u32>()?;
+//     let my_user = User::try_new(age, points)?;
+//     println!("{my_number} {my_user:?}");
+//     Ok(())
+// }
+
+fn do_some_stuff(number: &str, age: u8, points: u32) -> Result<(), AnyhowError> {
+    let my_number = number
+        .parse::<u32>()
+        .map_err(|_| anyhow!("Couldn't get a number"))?;
+    let my_user = User::try_new(age, points).map_err(|_| anyhow!("Couldn't make a user"))?;
+    println!("{my_number} {my_user:?}");
+    Ok(())
+}
+
 fn main() {
     let user_request = vec![
         User::try_new(121, 10000),
@@ -50,5 +69,13 @@ fn main() {
             }
         })
         .collect::<Vec<User>>();
-    println!("{users:?}")
+
+    println!("{users:?}");
+
+    let try_1 = do_some_stuff("number", 30, 1000);
+    let try_2 = do_some_stuff("50", 130, 1000);
+    let try_3 = do_some_stuff("90", 30, 100000);
+    let try_4 = do_some_stuff("number", 130, 1000);
+
+    println!("{try_1:?} {try_2:?} {try_3:?} {try_4:?}",);
 }
