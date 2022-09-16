@@ -4,6 +4,7 @@ fn get_typename<T: Any>(_: T) {
     let typename = type_name::<T>();
     println!("{}", typename);
 }
+
 fn main() {
     get_typename(8);
     get_typename("sdf");

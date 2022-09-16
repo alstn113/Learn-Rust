@@ -6,12 +6,6 @@ struct User {
     age: u8,
 }
 
-impl User {
-    fn try_new() -> Result<Self, CompanyError> {
-        todo!()
-    }
-}
-
 #[derive(Error, Debug)]
 enum CompanyError {
     #[error("Not Enough Data")]
@@ -23,8 +17,38 @@ enum CompanyError {
     #[error("Must be under 120 and 10,000 points, got {0:?} instead")]
     TooOldAndTooBig(User),
 }
+impl User {
+    fn try_new(age: u8, points: u32) -> Result<Self, CompanyError> {
+        use CompanyError::*;
+        match (age, points) {
+            (age, points) if age > 120 && points > 10000 => {
+                Err(TooOldAndTooBig(User { age, points }))
+            }
+            (_, points) if points > 10000 => Err(TooBig(points)),
+            (age, _) if age > 120 => Err(TooOld(age)),
+            _ => Ok(Self { age, points }),
+        }
+    }
+}
 
 fn main() {
-    let error = CompanyError::TooBig(1000000);
-    print!("{}", error);
+    let user_request = vec![
+        User::try_new(121, 10000),
+        User::try_new(60, 1000),
+        User::try_new(70, 20000),
+        User::try_new(130, 1000),
+        User::try_new(50, 500),
+    ];
+
+    let users = user_request
+        .into_iter()
+        .filter_map(|user_request| match user_request {
+            Ok(user) => Some(user),
+            Err(message) => {
+                println!("{message}");
+                None
+            }
+        })
+        .collect::<Vec<User>>();
+    println!("{users:?}")
 }
