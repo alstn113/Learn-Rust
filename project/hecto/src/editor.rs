@@ -1,6 +1,7 @@
 use crate::Document;
 use crate::Row;
 use crate::Terminal;
+use std::env;
 use termion::event::Key;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -20,11 +21,19 @@ pub struct Editor {
 
 impl Editor {
     pub fn default() -> Self {
+        let args: Vec<String> = env::args().collect();
+        // args[0] is the name of the program
+        // args[1] is the name of the file to open
+        let document = if args.len() > 1 {
+            Document::open(&args[1]).unwrap()
+        } else {
+            Document::default()
+        };
         Self {
             should_quit: false,
             terminal: Terminal::default().expect("Failed to initialize terminal"),
             cursor_position: Position::default(),
-            document: Document::open(),
+            document,
         }
     }
 
@@ -123,7 +132,7 @@ impl Editor {
             Terminal::clear_current_line();
             if let Some(row) = self.document.row(terminal_row as usize) {
                 self.draw_row(row)
-            } else if terminal_row == height / 3 {
+            } else if self.document.is_empty() && terminal_row == height / 3 {
                 self.draw_welcome_message();
             } else {
                 println!("~\r");
