@@ -27,7 +27,6 @@ impl Row {
             .skip(start)
             .take(end - start)
         {
-            // Rust에서는 Tab(8칸)이 중요하지 않기때문에 그냥 공백으로 변경
             if grapheme == "\t" {
                 result.push_str(" ");
             } else {
@@ -36,15 +35,12 @@ impl Row {
         }
         result
     }
-
     pub fn len(&self) -> usize {
         self.len
     }
-
     pub fn is_empty(&self) -> bool {
         self.len == 0
     }
-
     fn update_len(&mut self) {
         self.len = self.string[..].graphemes(true).count();
     }
