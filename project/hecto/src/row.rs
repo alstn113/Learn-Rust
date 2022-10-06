@@ -1,3 +1,4 @@
+use crate::SearchDirection;
 use std::cmp;
 use unicode_segmentation::UnicodeSegmentation;
 
@@ -47,12 +48,13 @@ impl Row {
             self.len += 1;
             return;
         }
-        let mut result = String::new();
+        let mut result: String = String::new();
         let mut length = 0;
         for (index, grapheme) in self.string[..].graphemes(true).enumerate() {
+            length += 1;
             if index == at {
-                result.push(c);
                 length += 1;
+                result.push(c);
             }
             result.push_str(grapheme);
         }
@@ -63,7 +65,7 @@ impl Row {
         if at >= self.len() {
             return;
         }
-        let mut result = String::new();
+        let mut result: String = String::new();
         let mut length = 0;
         for (index, grapheme) in self.string[..].graphemes(true).enumerate() {
             if index != at {
@@ -74,16 +76,14 @@ impl Row {
         self.len = length;
         self.string = result;
     }
-
     pub fn append(&mut self, new: &Self) {
         self.string = format!("{}{}", self.string, new.string);
         self.len += new.len;
     }
-
     pub fn split(&mut self, at: usize) -> Self {
         let mut row: String = String::new();
         let mut length = 0;
-        let mut splitted_row = String::new();
+        let mut splitted_row: String = String::new();
         let mut splitted_length = 0;
         for (index, grapheme) in self.string[..].graphemes(true).enumerate() {
             if index < at {
@@ -102,20 +102,41 @@ impl Row {
             len: splitted_length,
         }
     }
-
     pub fn as_bytes(&self) -> &[u8] {
         self.string.as_bytes()
     }
-    pub fn find(&self, query: &str, after: usize) -> Option<usize> {
-        let substring: String = self.string[..].graphemes(true).skip(after).collect();
-        let matching_bytes_index = substring.find(query);
-        if let Some(matching_bytes_index) = matching_bytes_index {
+    pub fn find(&self, query: &str, at: usize, direction: SearchDirection) -> Option<usize> {
+        if at > self.len {
+            return None;
+        }
+        let start = if direction == SearchDirection::Forward {
+            at
+        } else {
+            0
+        };
+        let end = if direction == SearchDirection::Forward {
+            self.len
+        } else {
+            at
+        };
+        #[allow(clippy::integer_arithmetic)]
+        let substring: String = self.string[..]
+            .graphemes(true)
+            .skip(start)
+            .take(end - start)
+            .collect();
+        let matching_byte_index = if direction == SearchDirection::Forward {
+            substring.find(query)
+        } else {
+            substring.rfind(query)
+        };
+        if let Some(matching_byte_index) = matching_byte_index {
             for (grapheme_index, (byte_index, _)) in
                 substring[..].grapheme_indices(true).enumerate()
             {
-                if matching_bytes_index == byte_index {
+                if matching_byte_index == byte_index {
                     #[allow(clippy::integer_arithmetic)]
-                    return Some(after + grapheme_index);
+                    return Some(start + grapheme_index);
                 }
             }
         }
