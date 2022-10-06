@@ -133,7 +133,7 @@ impl Editor {
                     if let Some(position) = editor.document.find(&query, &editor.cursor_position) {
                         editor.cursor_position = position;
                         editor.scroll();
-                    } else {
+                    } else if moved {
                         editor.move_cursor(Key::Left);
                     }
                 },
