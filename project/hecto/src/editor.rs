@@ -7,6 +7,7 @@ use std::time::Instant;
 use termion::color;
 use termion::event::Key;
 
+// constants
 const STATUS_FG_COLOR: color::Rgb = color::Rgb(63, 63, 63);
 const STATUS_BG_COLOR: color::Rgb = color::Rgb(239, 239, 239);
 const VERSION: &str = env!("CARGO_PKG_VERSION");
