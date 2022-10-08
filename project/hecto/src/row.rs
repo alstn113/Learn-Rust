@@ -1,5 +1,5 @@
 use crate::highlighting;
-use crate::HighLightOptions;
+use crate::HighlightingOptions;
 use crate::SearchDirection;
 use std::cmp;
 use termion::color;
@@ -42,12 +42,12 @@ impl Row {
                     .unwrap_or(&highlighting::Type::None);
                 if highlighting_type != current_highlighting {
                     current_highlighting = highlighting_type;
-                    let star_highlight =
+                    let start_highlight =
                         format!("{}", termion::color::Fg(highlighting_type.to_color()));
-                    result.push_str(&star_highlight[..]);
+                    result.push_str(&start_highlight[..]);
                 }
                 if c == '\t' {
-                    result.push_str(" ")
+                    result.push_str(" ");
                 } else {
                     result.push(c);
                 }
@@ -164,8 +164,7 @@ impl Row {
         }
         None
     }
-
-    pub fn highlight(&mut self, opts: HighLightOptions, word: Option<&str>) {
+    pub fn highlight(&mut self, opts: HighlightingOptions, word: Option<&str>) {
         let mut highlighting = Vec::new();
         let chars: Vec<char> = self.string.chars().collect();
         let mut matches = Vec::new();
@@ -183,7 +182,6 @@ impl Row {
             }
         }
         let mut prev_is_separator = true;
-        let mut in_string = false;
         let mut index = 0;
         while let Some(c) = chars.get(index) {
             if let Some(word) = word {
@@ -195,7 +193,6 @@ impl Row {
                     continue;
                 }
             }
-
             let previous_highlight = if index > 0 {
                 #[allow(clippy::integer_arithmetic)]
                 highlighting
@@ -204,38 +201,10 @@ impl Row {
             } else {
                 &highlighting::Type::None
             };
-
-            if opts.strings() {
-                if in_string {
-                    highlighting.push(highlighting::Type::String);
-
-                    if *c == '\\' && index < self.len().saturating_sub(1) {
-                        highlighting.push(highlighting::Type::String);
-                        index += 2;
-                        continue;
-                    }
-
-                    if *c == '"' {
-                        in_string = false;
-                        prev_is_separator = true;
-                    } else {
-                        prev_is_separator = false;
-                    }
-                    index += 1;
-                    continue;
-                } else if prev_is_separator && *c == '"' {
-                    highlighting.push(highlighting::Type::String);
-                    in_string = true;
-                    prev_is_separator = false;
-                    index += 1;
-                    continue;
-                }
-            }
-
             if opts.numbers() {
-                if c.is_ascii_digit()
-                    && (prev_is_separator || *previous_highlight == &highlighting::Type::Number)
-                    || (*c == '.' && *previous_highlight == &highlighting::Type::Number)
+                if (c.is_ascii_digit()
+                    && (prev_is_separator || previous_highlight == &highlighting::Type::Number))
+                    || (c == &'.' && previous_highlight == &highlighting::Type::Number)
                 {
                     highlighting.push(highlighting::Type::Number);
                 } else {
