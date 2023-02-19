@@ -16,11 +16,12 @@
 
 ### Rust 버전 확인하기
 
-    rustc --version
+    rustup --version // rust manager version
+    rustc --version // rust version
 
 ### rustup 업데이트
 
-    rustup --update
+    rustup update
 
 ### VSC Extension
 
